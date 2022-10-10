@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:jury_marks/data/constants/colors.dart';
 import 'package:jury_marks/views/home_view.dart';
 import 'package:jury_marks/widgets/home_widgets/jury_list.dart';
+import 'package:jury_marks/widgets/home_widgets/team_list.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -17,7 +19,16 @@ class HomeScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 30),
               child: Column(
-                children: const <Widget>[JuryList()],
+                children: const <Widget>[
+                  JuryList(),
+                  Divider(
+                    thickness: 2,
+                    color: AppColors.backgroundAdditional,
+                    endIndent: 25,
+                    indent: 25,
+                  ),
+                  TeamList()
+                ],
               ),
             ),
           );
