@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
               bodyText1: TextStyle(color: AppColors.textPrimary))),
       initialRoute: AppRoutes.home,
       routes: {
-        AppRoutes.home: (context) => const HomeScreen(),
+        AppRoutes.home: (context) => HomeScreen(),
         AppRoutes.team: (context) => const TeamScreen(),
       },
     );

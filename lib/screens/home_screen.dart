@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:jury_marks/views/home_view.dart';
-import 'package:jury_marks/widgets/home_widgets/jury_list.dart';
-import 'package:jury_marks/widgets/home_widgets/team_list.dart';
+import 'package:jury_marks/widgets/home_widgets/home_error.dart';
+import 'package:jury_marks/widgets/home_widgets/home_main_info.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+  late Widget widget;
 
   @override
   Widget build(BuildContext context) {
@@ -13,21 +14,17 @@ class HomeScreen extends StatelessWidget {
         body: FutureBuilder(
       future: context.read<HomeView>().initialize(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (context.read<HomeView>().initialized) {
-          return Center(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.06),
-              child: Column(
-                children: const <Widget>[JuryList(), TeamList()],
-              ),
-            ),
-          );
+        if (context.watch<HomeView>().initialized) {
+          widget = context.read<HomeView>().errorMessage.isEmpty
+              ? const HomeInfo()
+              : const HomeError();
         } else {
-          return const Center(
+          widget = const Center(
             child: CircularProgressIndicator(),
           );
         }
+        return AnimatedSwitcher(
+            duration: const Duration(milliseconds: 500), child: widget);
       },
     ));
   }

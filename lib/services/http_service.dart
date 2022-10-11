@@ -8,22 +8,26 @@ import '../data/constants/configurations.dart';
 
 class HttpService {
   Future<Result> getInitialData() async {
-    Response res = await get(Uri.parse(AppConfig.webApiUrl)
-        .replace(queryParameters: {'action': HttpActions.getInitialData.name}));
+    try {
+      Response res = await get(Uri.parse(AppConfig.webApiUrl).replace(
+          queryParameters: {'action': HttpActions.getInitialData.name}));
 
-    if (res.statusCode == 200) {
-      try {
-        dynamic json = jsonDecode(res.body);
-        if (json['data'] != null) {
-          return Result(data: json['data']);
-        } else {
-          return Result(status: HttpStatus.failed, error: json['error']);
+      if (res.statusCode == 200) {
+        try {
+          dynamic json = jsonDecode(res.body);
+          if (json['data'] != null) {
+            return Result(data: json['data']);
+          } else {
+            return Result(status: HttpStatus.failed, error: json['error']);
+          }
+        } catch (e) {
+          return Result(status: HttpStatus.failed, error: e.toString());
         }
-      } catch (e) {
-        return Result(status: HttpStatus.failed, error: e.toString());
+      } else {
+        return Result(status: HttpStatus.failed, error: "Something went wrong");
       }
-    } else {
-      return Result(status: HttpStatus.failed, error: "Something went wrong");
+    } catch (e) {
+      return Result(status: HttpStatus.failed, error: e.toString());
     }
   }
 
@@ -31,21 +35,30 @@ class HttpService {
       {required String teamName,
       required String juryName,
       required List<int> marks}) async {
-    Response res = await post(Uri.parse(AppConfig.webApiUrl).replace(
-        queryParameters: {
-          'action': HttpActions.postMarks.name,
-          'teamName': teamName,
-          'juryName': juryName
-        }));
+    try {
+      Response res = await post(
+          Uri.parse(AppConfig.webApiUrl).replace(queryParameters: {
+            'action': HttpActions.postMarks.name,
+          }),
+          body: jsonEncode(
+              {'teamName': teamName, 'juryName': juryName, 'marks': marks}));
 
-    if (res.statusCode == 200) {
-      dynamic json = jsonDecode(res.body);
-      if (json['status'] == HttpStatus.success) {
-        return Result(status: HttpStatus.success);
-      } else {
-        return Result(status: HttpStatus.failed, error: json['message']);
+
+      res = await get(Uri.parse(res.headers['location']!));
+      print(res.body);
+
+
+      if (res.statusCode == 200) {
+        dynamic json = jsonDecode(res.body);
+        if (json['status'] == HttpStatus.success) {
+          return Result(status: HttpStatus.success);
+        } else {
+          return Result(status: HttpStatus.failed, error: json['message']);
+        }
       }
+      return Result(status: HttpStatus.failed, error: "Something went wrong");
+    } catch (e) {
+      return Result(status: HttpStatus.failed, error: e.toString());
     }
-    return Result(status: HttpStatus.failed, error: "Something went wrong");
   }
 }

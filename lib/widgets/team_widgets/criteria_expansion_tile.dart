@@ -34,7 +34,7 @@ class CriteriaExpansionTile extends StatelessWidget {
           title: Center(
               child: RatingBar.builder(
                   initialRating: context
-                      .read<HomeView>()
+                      .watch<HomeView>()
                       .getTeamMarkById(index)
                       .toDouble(),
                   minRating: 0,

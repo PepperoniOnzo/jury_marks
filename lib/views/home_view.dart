@@ -43,11 +43,20 @@ class HomeView extends ChangeNotifier with HttpService {
 
       selectedJury = jury.first;
       currentMarks = List.filled(criteriaSequence.length, 0);
+
+      errorMessage = '';
     } else {
       errorMessage = result.error;
     }
 
     initialized = true;
+    notifyListeners();
+  }
+
+  void tryRefresh() {
+    initialized = false;
+    notifyListeners();
+    initialize();
   }
 
   void setSelectionJury(String? selected) {
@@ -70,20 +79,28 @@ class HomeView extends ChangeNotifier with HttpService {
   }
 
   int getTeamMarkById(int index) {
-    return teamMarks[selectedTeam].getMarkByIndex(selectedJury, index);
+    return currentMarks[index];
   }
 
   void setTeamMark(int mark, int index) {
     currentMarks[index] = mark;
+    notifyListeners();
   }
 
-  Future<void> submit() async {
+
+  Future<String> submit() async {
     Result result = await postMarks(
         teamName: teams[selectedTeam],
         juryName: selectedJury,
         marks: currentMarks);
+    if (result.status == HttpStatus.failed) {
+      return result.error;
+    }
+
     teamMarks[selectedTeam].marks[selectedJury] = [...currentMarks];
     currentMarks = List.filled(criteriaSequence.length, 0);
+
+    return '';
   }
 
   void resetTeamMarks() {
