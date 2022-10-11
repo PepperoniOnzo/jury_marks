@@ -16,7 +16,7 @@ class TeamList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Padding(
-              padding: EdgeInsets.only(bottom: 12),
+              padding: EdgeInsets.symmetric(vertical: 12),
               child: Text(
                 "Teams list",
                 style: TextStyle(fontSize: 20),

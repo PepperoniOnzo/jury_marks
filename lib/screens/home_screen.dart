@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:jury_marks/data/constants/colors.dart';
 import 'package:jury_marks/views/home_view.dart';
 import 'package:jury_marks/widgets/home_widgets/jury_list.dart';
 import 'package:jury_marks/widgets/home_widgets/team_list.dart';
@@ -17,18 +16,10 @@ class HomeScreen extends StatelessWidget {
         if (context.read<HomeView>().initialized) {
           return Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30),
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.06),
               child: Column(
-                children: const <Widget>[
-                  JuryList(),
-                  Divider(
-                    thickness: 2,
-                    color: AppColors.backgroundAdditional,
-                    endIndent: 25,
-                    indent: 25,
-                  ),
-                  TeamList()
-                ],
+                children: const <Widget>[JuryList(), TeamList()],
               ),
             ),
           );

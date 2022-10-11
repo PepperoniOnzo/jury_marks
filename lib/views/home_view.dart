@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:jury_marks/data/constants/http_constants.dart';
 import 'package:jury_marks/data/models/post_marks_model.dart';
@@ -19,77 +17,37 @@ class HomeView extends ChangeNotifier with HttpService {
   String errorMessage = '';
 
   Future<void> initialize() async {
-    // Result result = await getInitialData();
-    // if (result.status == HttpStatus.success) {
-    //   jury = (result.data['jury'] as List).map((e) => e as String).toList();
-    //   jury = (result.data['teams'] as List).map((e) => e as String).toList();
-    // } else {
-    //   errorMessage = result.error;
-    // }
+    Result result = await getInitialData();
+    if (result.status == HttpStatus.success) {
+      jury =
+          (result.data?['juryNames'] as List).map((e) => e as String).toList();
+      teams =
+          (result.data?['teamNames'] as List).map((e) => e as String).toList();
+      criteriaSequence = (result.data?['criteriaSequence'] as List)
+          .map((e) => e as String)
+          .toList();
 
-    jury = [
-      'lee changmin (리창민; 李章旻) - leader',
-      'mayur',
-      'wang',
-      'zoe',
-    ];
+      criterias = Map<String, List<String>>.from(result.data?['criterias'].map(
+          (key, value) => MapEntry(
+              key, (value as List).map((e) => e.toString()).toList())));
 
-    teams = [
-      'team leader 1',
-      'team leader 2',
-    ];
+      Map<String, dynamic>.from(
+              result.data?['marks'].map((key, value) => MapEntry(key, value)))
+          .forEach((key, value) {
+        teamMarks.add(TeamMarks(
+            teamName: key,
+            marks: Map<String, List<int>>.from(value.map((key, value) =>
+                MapEntry(
+                    key, (value as List).map((e) => e as int).toList())))));
+      });
 
-    criteriaSequence = [
-      'Impact',
-      'Duration',
-    ];
-
-    criterias = {
-      'Impact': [
-        'Impact 0',
-        'Impact 1',
-        'Impact 2',
-        'Impact 3',
-        'Impact 4',
-        'Impact 5',
-      ],
-      'Duration': [
-        'Duration 0',
-        'Duration 1',
-        'Duration 2',
-        'Duration 3',
-        'Duration 4',
-        'Duration 5',
-      ],
-    };
-
-    teamMarks = [
-      TeamMarks(
-        teamName: teams[0],
-        marks: {
-          jury[0]: [2, 0],
-          jury[1]: [0, 0],
-          jury[2]: [0, 0],
-          jury[3]: [0, 0],
-        },
-      ),
-      TeamMarks(
-        teamName: teams[1],
-        marks: {
-          jury[0]: [3, 2],
-          jury[1]: [4, 1],
-          jury[2]: [1, 4],
-          jury[3]: [0, 0],
-        },
-      ),
-    ];
-
-    selectedJury = jury.first;
-
-    currentMarks = List.filled(criteriaSequence.length, 0);
+      selectedJury = jury.first;
+      currentMarks = List.filled(criteriaSequence.length, 0);
+    } else {
+      errorMessage = result.error;
+    }
 
     initialized = true;
-    //notifyListeners();
   }
 
   void setSelectionJury(String? selected) {
@@ -108,7 +66,7 @@ class HomeView extends ChangeNotifier with HttpService {
   }
 
   List<String> getCriteriasDescription(int index) {
-    return criterias[criteriaSequence[index]] ?? [];
+    return criterias.values.elementAt(index);
   }
 
   int getTeamMarkById(int index) {
@@ -119,7 +77,11 @@ class HomeView extends ChangeNotifier with HttpService {
     currentMarks[index] = mark;
   }
 
-  void submit() {
+  Future<void> submit() async {
+    Result result = await postMarks(
+        teamName: teams[selectedTeam],
+        juryName: selectedJury,
+        marks: currentMarks);
     teamMarks[selectedTeam].marks[selectedJury] = [...currentMarks];
     currentMarks = List.filled(criteriaSequence.length, 0);
   }

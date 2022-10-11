@@ -1,6 +1,6 @@
 class Result {
   String status, error;
-  dynamic data;
+  Map<String, dynamic>? data;
 
   Result({this.status = 'SUCCESS', this.error = '', this.data});
 }

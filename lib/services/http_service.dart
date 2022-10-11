@@ -26,4 +26,26 @@ class HttpService {
       return Result(status: HttpStatus.failed, error: "Something went wrong");
     }
   }
+
+  Future<Result> postMarks(
+      {required String teamName,
+      required String juryName,
+      required List<int> marks}) async {
+    Response res = await post(Uri.parse(AppConfig.webApiUrl).replace(
+        queryParameters: {
+          'action': HttpActions.postMarks.name,
+          'teamName': teamName,
+          'juryName': juryName
+        }));
+
+    if (res.statusCode == 200) {
+      dynamic json = jsonDecode(res.body);
+      if (json['status'] == HttpStatus.success) {
+        return Result(status: HttpStatus.success);
+      } else {
+        return Result(status: HttpStatus.failed, error: json['message']);
+      }
+    }
+    return Result(status: HttpStatus.failed, error: "Something went wrong");
+  }
 }

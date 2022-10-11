@@ -1,4 +1,4 @@
-enum HttpActions { getInitialData }
+enum HttpActions { getInitialData, postMarks }
 
 class HttpStatus {
   static const String success = 'SUCCESS';
