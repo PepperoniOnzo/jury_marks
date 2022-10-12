@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:jury_marks/data/constants/http_constants.dart';
 import 'package:jury_marks/data/models/result.dart';
 
@@ -9,13 +7,13 @@ import '../data/constants/configurations.dart';
 class HttpService {
   Future<Result> getInitialData() async {
     try {
-      Response res = await get(Uri.parse(AppConfig.webApiUrl).replace(
-          queryParameters: {'action': HttpActions.getInitialData.name}));
+      Response res = await Dio().get(AppConfig.webApiUrl,
+          queryParameters: {'action': HttpActions.getInitialData.name});
 
       if (res.statusCode == 200) {
         try {
-          dynamic json = jsonDecode(res.body);
-          if (json['data'] != null) {
+          dynamic json = res.data;
+          if (json != null) {
             return Result(data: json['data']);
           } else {
             return Result(status: HttpStatus.failed, error: json['error']);
@@ -36,25 +34,17 @@ class HttpService {
       required String juryName,
       required List<int> marks}) async {
     try {
-      Response res = await post(
-          Uri.parse(AppConfig.webApiUrl).replace(queryParameters: {
+      Response s = await Dio().request(AppConfig.webApiUrl,
+          queryParameters: {
             'action': HttpActions.postMarks.name,
-          }),
-          body: jsonEncode(
-              {'teamName': teamName, 'juryName': juryName, 'marks': marks}));
+            'marks': marks,
+            'juryName': juryName,
+            'teamName': teamName
+          },
+          options: Options(method: "GET"));
 
-
-      res = await get(Uri.parse(res.headers['location']!));
-      print(res.body);
-
-
-      if (res.statusCode == 200) {
-        dynamic json = jsonDecode(res.body);
-        if (json['status'] == HttpStatus.success) {
-          return Result(status: HttpStatus.success);
-        } else {
-          return Result(status: HttpStatus.failed, error: json['message']);
-        }
+      if (s.statusCode == 200) {
+        return Result();
       }
       return Result(status: HttpStatus.failed, error: "Something went wrong");
     } catch (e) {

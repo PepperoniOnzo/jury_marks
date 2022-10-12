@@ -21,7 +21,7 @@ class HomeError extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: Text(context.read<HomeView>().errorMessage,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 20)),
+                      style: const TextStyle(fontSize: 20)),
                 ),
                 ElevatedButton(
                   style: ButtonStyle(

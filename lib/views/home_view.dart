@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:jury_marks/data/constants/http_constants.dart';
 import 'package:jury_marks/data/models/post_marks_model.dart';
 import 'package:jury_marks/data/models/result.dart';
@@ -86,7 +86,6 @@ class HomeView extends ChangeNotifier with HttpService {
     currentMarks[index] = mark;
     notifyListeners();
   }
-
 
   Future<String> submit() async {
     Result result = await postMarks(

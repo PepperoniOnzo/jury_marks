@@ -4,6 +4,7 @@ import 'package:jury_marks/widgets/home_widgets/home_error.dart';
 import 'package:jury_marks/widgets/home_widgets/home_main_info.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
   late Widget widget;
