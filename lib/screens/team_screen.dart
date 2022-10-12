@@ -38,8 +38,16 @@ class TeamScreen extends StatelessWidget {
                   MaterialStateProperty.all(AppColors.buttonPrimary),
             ),
             onPressed: () {
-              context.read<HomeView>().submit();
-              Navigator.of(context).pop();
+              context.read<HomeView>().submit().then((value) {
+                if (value.isNotEmpty) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(value)));
+                } else {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(const SnackBar(content: Text('Submited!')));
+                }
+              });
             },
             child: const Padding(
               padding: EdgeInsets.symmetric(vertical: 16),

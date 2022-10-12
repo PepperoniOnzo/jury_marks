@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:jury_marks/data/constants/http_constants.dart';
 import 'package:jury_marks/data/models/result.dart';
 
@@ -8,22 +6,26 @@ import '../data/constants/configurations.dart';
 
 class HttpService {
   Future<Result> getInitialData() async {
-    Response res = await get(Uri.parse(AppConfig.webApiUrl)
-        .replace(queryParameters: {'action': HttpActions.getInitialData.name}));
+    try {
+      Response res = await Dio().get(AppConfig.webApiUrl,
+          queryParameters: {'action': HttpActions.getInitialData.name});
 
-    if (res.statusCode == 200) {
-      try {
-        dynamic json = jsonDecode(res.body);
-        if (json['data'] != null) {
-          return Result(data: json['data']);
-        } else {
-          return Result(status: HttpStatus.failed, error: json['error']);
+      if (res.statusCode == 200) {
+        try {
+          dynamic json = res.data;
+          if (json != null) {
+            return Result(data: json['data']);
+          } else {
+            return Result(status: HttpStatus.failed, error: json['error']);
+          }
+        } catch (e) {
+          return Result(status: HttpStatus.failed, error: e.toString());
         }
-      } catch (e) {
-        return Result(status: HttpStatus.failed, error: e.toString());
+      } else {
+        return Result(status: HttpStatus.failed, error: "Something went wrong");
       }
-    } else {
-      return Result(status: HttpStatus.failed, error: "Something went wrong");
+    } catch (e) {
+      return Result(status: HttpStatus.failed, error: e.toString());
     }
   }
 
@@ -31,21 +33,22 @@ class HttpService {
       {required String teamName,
       required String juryName,
       required List<int> marks}) async {
-    Response res = await post(Uri.parse(AppConfig.webApiUrl).replace(
-        queryParameters: {
-          'action': HttpActions.postMarks.name,
-          'teamName': teamName,
-          'juryName': juryName
-        }));
+    try {
+      Response s = await Dio().request(AppConfig.webApiUrl,
+          queryParameters: {
+            'action': HttpActions.postMarks.name,
+            'marks': marks,
+            'juryName': juryName,
+            'teamName': teamName
+          },
+          options: Options(method: "GET"));
 
-    if (res.statusCode == 200) {
-      dynamic json = jsonDecode(res.body);
-      if (json['status'] == HttpStatus.success) {
-        return Result(status: HttpStatus.success);
-      } else {
-        return Result(status: HttpStatus.failed, error: json['message']);
+      if (s.statusCode == 200) {
+        return Result();
       }
+      return Result(status: HttpStatus.failed, error: "Something went wrong");
+    } catch (e) {
+      return Result(status: HttpStatus.failed, error: e.toString());
     }
-    return Result(status: HttpStatus.failed, error: "Something went wrong");
   }
 }
