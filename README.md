@@ -1,6 +1,6 @@
 # Jury Marks
 
-Flutter project for managing jury marks in `Google Sheets` using web applicattion created by `Google Apps Script`. State management is handled by `Provider` and `dio` package is used for making http requests.
+Flutter project for managing jury marks in `Google Sheets` using web application created with `Google Apps Script`. State management is handled by `Provider` and `dio` package is used for making http requests.
 
 ## Content table
 
@@ -134,7 +134,7 @@ data/
 
 ## Screens and widgets
 
-This directories conatins all widgets and screens of app.
+These directories contain all widgets and screens of app.
 
 ```text
 screens/
