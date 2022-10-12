@@ -1,0 +1,98 @@
+{
+    "status": "SUCCESS",
+    "data": {
+        "juryNames": [
+            "jury1",
+            "jury2",
+            "jury3",
+            "jury4",
+            "jury5"
+        ],
+        "teamNames": [
+            "team1"
+        ],
+        "criteriaSequence": [
+            "criteria1",
+            "criteria2",
+            "criteria3",
+            "criteria4",
+            "criteria5"
+        ],
+        "criterias": {
+            "criteria 1": [
+                "description0 criteria 1",
+                "description1 criteria 1",
+                "description2 criteria 1",
+                "description3 criteria 1",
+                "description4 criteria 1"
+            ],
+            "criteria 2": [
+                "description0 criteria 2",
+                "description1 criteria 2",
+                "description2 criteria 2",
+                "description3 criteria 2",
+                "description4 criteria 2"
+            ],
+            "criteria 3": [
+                "description0 criteria 3",
+                "description1 criteria 3",
+                "description2 criteria 3",
+                "description3 criteria 3",
+                "description4 criteria 3"
+            ],
+            "criteria 4": [
+                "description0 criteria 4",
+                "description1 criteria 4",
+                "description2 criteria 4",
+                "description3 criteria 4",
+                "description4 criteria 4"
+            ],
+            "criteria 5": [
+                "description0 criteria 5",
+                "description1 criteria 5",
+                "description2 criteria 5",
+                "description3 criteria 5",
+                "description4 criteria 5"
+            ]
+        },
+        "marks": {
+            "team1": {
+                "jury1": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "jury2": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
+                "jury3": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "jury4": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "jury5": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    }
+}
